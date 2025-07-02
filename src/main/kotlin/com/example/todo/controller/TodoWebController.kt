@@ -113,6 +113,55 @@ class TodoWebController(
     }
 
     /**
+     * Todo 수정 폼 페이지 제공
+     * 
+     * GET /todos/{id}/edit 요청을 처리하여 Todo 수정 폼 페이지를 반환합니다.
+     * 
+     * @param id 수정할 Todo의 ID
+     * @param model 뷰에 전달할 데이터를 담는 모델 객체
+     * @param session HTTP 세션 객체 (사용자 인증 정보 확인)
+     * @return 로그인 상태면 Todo 수정 폼 페이지, 비로그인 상태면 로그인 페이지로 리다이렉트
+     */
+    @GetMapping("/{id}/edit")
+    fun editForm(@PathVariable id: Long, model: Model, session: HttpSession): String {
+        // 세션에서 사용자 ID 가져오기 (없으면 로그인 페이지로 리다이렉트)
+        val userId = session.getAttribute("userId") as? Long
+            ?: return "redirect:/login"
+
+        // 기존 Todo 정보 조회하여 폼에 채워넣기
+        val todo = todoService.getTodoById(id, userId)
+        val todoRequest = TodoRequest(
+            title = todo.title,
+            description = todo.description ?: "",
+            isDone = todo.isDone
+        )
+        model.addAttribute("todoRequest", todoRequest)
+        model.addAttribute("todoId", id)
+        return "edit"
+    }
+
+    /**
+     * Todo 수정 처리
+     * 
+     * POST /todos/{id}/edit 요청을 처리하여 기존 Todo 항목을 수정합니다.
+     * 
+     * @param id 수정할 Todo의 ID
+     * @param todoRequest Todo 수정 요청 데이터 (제목, 설명, 완료 상태)
+     * @param session HTTP 세션 객체 (사용자 인증 정보 확인)
+     * @return 로그인 상태면 Todo 목록 페이지로 리다이렉트, 비로그인 상태면 로그인 페이지로 리다이렉트
+     */
+    @PostMapping("/{id}/edit")
+    fun edit(@PathVariable id: Long, @ModelAttribute todoRequest: TodoRequest, session: HttpSession): String {
+        // 세션에서 사용자 ID 가져오기 (없으면 로그인 페이지로 리다이렉트)
+        val userId = session.getAttribute("userId") as? Long
+            ?: return "redirect:/login"
+
+        // Todo 수정
+        todoService.updateTodo(id, todoRequest, userId)
+        return "redirect:/todos"
+    }
+
+    /**
      * Todo 삭제 처리
      * 
      * POST /todos/{id}/delete 요청을 처리하여 특정 Todo 항목을 삭제합니다.

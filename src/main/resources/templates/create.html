@@ -5,73 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>새 할일 등록</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
             padding: 20px;
         }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .form-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .form-header p {
+            color: #5a6c7d;
+            font-size: 14px;
+        }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        .required {
+            color: #ff6b6b;
         }
         input[type="text"], textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
             font-size: 16px;
-            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 1);
         }
         textarea {
-            height: 100px;
+            height: 120px;
             resize: vertical;
+            font-family: inherit;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
         }
         .btn {
-            padding: 10px 20px;
-            margin: 10px 5px 0 0;
+            flex: 1;
+            padding: 14px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn:hover::before {
+            left: 100%;
         }
         .btn-primary {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         .btn-secondary {
-            background-color: #6c757d;
+            background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
             color: white;
-            text-decoration: none;
-            display: inline-block;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
         }
-        .btn:hover {
-            opacity: 0.9;
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            .form-card {
+                padding: 24px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>새 할일 등록</h1>
-    
-    <form th:action="@{/todos/create}" method="post" th:object="${todoRequest}">
-        <div class="form-group">
-            <label for="title">제목 *</label>
-            <input type="text" id="title" th:field="*{title}" required>
+    <div class="container">
+        <div class="form-card">
+            <!-- 폼 헤더 -->
+            <div class="form-header">
+                <h1>✨ 새 할일 등록</h1>
+                <p>새로운 할일을 추가해보세요</p>
+            </div>
+            
+            <!-- 할일 등록 폼 -->
+            <form th:action="@{/todos/create}" method="post" th:object="${todoRequest}">
+                <div class="form-group">
+                    <label for="title">제목 <span class="required">*</span></label>
+                    <input type="text" id="title" th:field="*{title}" required placeholder="할일 제목을 입력하세요">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">설명</label>
+                    <textarea id="description" th:field="*{description}" placeholder="할일에 대한 상세 설명을 입력하세요 (선택사항)"></textarea>
+                </div>
+                
+                <!-- 버튼 그룹 -->
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">📝 등록하기</button>
+                    <a th:href="@{/todos}" class="btn btn-secondary">❌ 취소</a>
+                </div>
+            </form>
         </div>
-        
-        <div class="form-group">
-            <label for="description">설명</label>
-            <textarea id="description" th:field="*{description}" placeholder="할일에 대한 상세 설명을 입력하세요"></textarea>
-        </div>
-        
-        <div>
-            <button type="submit" class="btn btn-primary">등록</button>
-            <a th:href="@{/todos}" class="btn btn-secondary">취소</a>
-        </div>
-    </form>
+    </div>
 </body>
 </html>

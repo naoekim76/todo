@@ -5,103 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
-            background-color: #f5f5f5;
         }
         .form-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 420px;
         }
-        h1 {
+        .form-header {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+        }
+        .form-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .form-header p {
+            color: #5a6c7d;
+            font-size: 14px;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
         }
         input[type="email"], input[type="password"], input[type="text"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
             font-size: 16px;
-            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 1);
         }
         .btn {
             width: 100%;
-            padding: 12px;
-            background-color: #007bff;
+            padding: 14px;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 12px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn:hover::before {
+            left: 100%;
         }
         .btn:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(86, 171, 47, 0.4);
         }
         .error {
-            color: #dc3545;
+            color: #ff6b6b;
             font-size: 14px;
-            margin-top: 5px;
+            margin-top: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #ff6b6b;
         }
         .login-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        .login-link p {
+            color: #5a6c7d;
+            font-size: 14px;
         }
         .login-link a {
-            color: #007bff;
+            color: #667eea;
             text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
         .login-link a:hover {
+            color: #764ba2;
             text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1>회원가입</h1>
+        <!-- 폼 헤더 -->
+        <div class="form-header">
+            <h1>🎆 회원가입</h1>
+            <p>새로운 계정을 만들어 Todo를 시작하세요</p>
+        </div>
         
+        <!-- 회원가입 폼 -->
         <form th:action="@{/signup}" method="post" th:object="${signupRequest}">
             <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" id="email" th:field="*{email}" required>
+                <label for="email">📧 이메일</label>
+                <input type="email" id="email" th:field="*{email}" required placeholder="이메일을 입력하세요">
                 <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
             </div>
             
             <div class="form-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" th:field="*{password}" required>
+                <label for="password">🔒 비밀번호</label>
+                <input type="password" id="password" th:field="*{password}" required placeholder="비밀번호를 입력하세요">
                 <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
             </div>
             
             <div class="form-group">
-                <label for="nickname">닉네임</label>
-                <input type="text" id="nickname" th:field="*{nickname}" required>
+                <label for="nickname">👤 닉네임</label>
+                <input type="text" id="nickname" th:field="*{nickname}" required placeholder="닉네임을 입력하세요">
                 <div class="error" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
             </div>
             
             <div class="error" th:if="${error}" th:text="${error}"></div>
             
-            <button type="submit" class="btn">가입하기</button>
+            <button type="submit" class="btn">🎉 가입하기</button>
         </form>
         
+        <!-- 로그인 링크 -->
         <div class="login-link">
-            <p>이미 계정이 있으신가요? <a th:href="@{/login}">로그인</a></p>
+            <p>이미 계정이 있으신가요? <a th:href="@{/login}">로그인 하기</a></p>
         </div>
     </div>
 </body>
