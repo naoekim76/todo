@@ -2,6 +2,9 @@
 
 ## 📋 프로젝트 개요
 Spring Boot + Kotlin 기반의 세션 인증을 사용하는 Todo 관리 웹 애플리케이션
+- **완전한 CRUD 기능**: 할일 생성, 조회, 수정, 삭제 모든 기능 지원
+- **모던 UI/UX**: 글래스모피즘과 그라데이션을 활용한 현대적 디자인
+- **반응형 웹 디자인**: 모바일과 데스크톱 환경 모두 지원
 
 ## 🛠 기술 스택
 - **Backend**: Spring Boot 3.x, Kotlin
@@ -39,7 +42,7 @@ todo/
     │   │   ├── controller/
     │   │   │   ├── AuthController.kt       # 인증 관련 컨트롤러 (회원가입/로그인)
     │   │   │   ├── TodoController.kt       # Todo REST API 컨트롤러
-    │   │   │   └── TodoWebController.kt    # Todo 웹 페이지 컨트롤러
+    │   │   │   └── TodoWebController.kt    # Todo 웹 페이지 컨트롤러 (수정 기능 포함)
     │   │   │
     │   │   ├── dto/
     │   │   │   ├── TodoRequest.kt          # Todo 요청 DTO
@@ -47,7 +50,7 @@ todo/
     │   │   │   └── UserRequest.kt          # 사용자 요청 DTO (회원가입/로그인)
     │   │   │
     │   │   ├── entity/
-    │   │   │   ├── Todo.kt                 # Todo JPA 엔티티
+    │   │   │   ├── Todo.kt                 # Todo JPA 엔티티 (한글 주석 포함)
     │   │   │   └── User.kt                 # User JPA 엔티티
     │   │   │
     │   │   ├── repository/
@@ -55,16 +58,17 @@ todo/
     │   │   │   └── UserRepository.kt       # User 데이터 액세스 레이어
     │   │   │
     │   │   └── service/
-    │   │       ├── TodoService.kt          # Todo 비즈니스 로직
+    │   │       ├── TodoService.kt          # Todo 비즈니스 로직 (한글 주석 포함)
     │   │       └── UserService.kt          # User 비즈니스 로직
     │   │
     │   └── resources/
     │       ├── application.properties      # 애플리케이션 설정
-    │       └── templates/                  # Thymeleaf 템플릿
-    │           ├── create.html             # Todo 생성 페이지
-    │           ├── list.html               # Todo 목록 페이지
-    │           ├── login.html              # 로그인 페이지
-    │           └── signup.html             # 회원가입 페이지
+    │       └── templates/                  # Thymeleaf 템플릿 (모던 디자인 적용)
+    │           ├── create.html             # Todo 생성 페이지 (글래스모피즘 디자인)
+    │           ├── edit.html               # Todo 수정 페이지 (새로 추가)
+    │           ├── list.html               # Todo 목록 페이지 (카드형 레이아웃)
+    │           ├── login.html              # 로그인 페이지 (센터 정렬 디자인)
+    │           └── signup.html             # 회원가입 페이지 (그라데이션 배경)
     │
     └── test/
         └── kotlin/com/example/todo/
@@ -83,12 +87,12 @@ todo/
 
 ### 3. **Service Layer**
 - `UserService.kt`: 회원가입, 로그인, 비밀번호 암호화 처리
-- `TodoService.kt`: 할일 CRUD 비즈니스 로직, 사용자별 데이터 격리
+- `TodoService.kt`: 할일 완전한 CRUD 비즈니스 로직, 사용자별 데이터 격리 (수정 기능 포함)
 
 ### 4. **Controller Layer**
 - `AuthController.kt`: 인증 관련 웹 페이지 처리
-- `TodoWebController.kt`: 할일 관련 웹 페이지 처리 (세션 검증 포함)
-- `TodoController.kt`: REST API 엔드포인트
+- `TodoWebController.kt`: 할일 관련 웹 페이지 처리 (생성, 조회, **수정**, 삭제, 완료 토글)
+- `TodoController.kt`: REST API 엔드포인트 (완전한 CRUD)
 
 ### 5. **DTO Layer**
 - `TodoRequest/Response.kt`: 할일 데이터 전송 객체
@@ -117,9 +121,11 @@ todo/
 - `GET /login` - 로그인 폼
 - `POST /login` - 로그인 처리
 - `POST /logout` - 로그아웃 처리
-- `GET /todos` - Todo 목록 페이지
+- `GET /todos` - Todo 목록 페이지 (카드형 레이아웃)
 - `GET /todos/create` - Todo 생성 폼
 - `POST /todos/create` - Todo 생성 처리
+- `GET /todos/{id}/edit` - **Todo 수정 폼 (새로 추가)**
+- `POST /todos/{id}/edit` - **Todo 수정 처리 (새로 추가)**
 - `POST /todos/{id}/toggle` - Todo 완료상태 토글
 - `POST /todos/{id}/delete` - Todo 삭제
 
@@ -168,11 +174,31 @@ todo/
      - Username: `sa`
      - Password: `password`
 
+## 🎨 UI/UX 디자인 특징
+
+### **모던 디자인 시스템**
+- **글래스모피즘**: 반투명 배경과 블러 효과로 현대적 느낌
+- **그라데이션**: 부드러운 색상 조합으로 시각적 깊이감 제공
+- **마이크로 인터랙션**: 호버 효과, 애니메이션으로 사용자 경험 향상
+
+### **색상 팔레트**
+- **메인 컬러**: `#667eea` ~ `#764ba2` (보라-파랑 그라데이션)
+- **성공 컬러**: `#56ab2f` ~ `#a8e6cf` (초록 그라데이션)
+- **위험 컬러**: `#ff6b6b` ~ `#ffa8a8` (빨강 그라데이션)
+- **텍스트**: `#2c3e50`, `#5a6c7d` (차분한 회색 톤)
+
+### **페이지별 디자인**
+- **`list.html`**: 테이블 → 카드 형태로 변경, 호버 효과 적용
+- **`create.html` & `edit.html`**: 폼 디자인 통일, 입력 필드 포커스 효과
+- **`login.html` & `signup.html`**: 센터 정렬, 인증 페이지 전용 레이아웃
+
 ## 📝 주요 특징
 
+- ✅ **완전한 CRUD 기능**: 할일 생성, 조회, **수정**, 삭제 모든 기능 지원
 - ✅ **사용자별 데이터 격리**: 로그인한 사용자만 자신의 Todo 관리 가능
 - ✅ **세션 기반 인증**: 간단하고 직관적인 인증 시스템
-- ✅ **반응형 UI**: Thymeleaf 기반의 깔끔한 웹 인터페이스
+- ✅ **모던 반응형 UI**: 글래스모피즘과 그라데이션을 활용한 현대적 웹 인터페이스
 - ✅ **데이터 검증**: 백엔드 및 프론트엔드 입력값 검증
 - ✅ **보안**: BCrypt 암호화, CSRF 보호 비활성화 (개발용)
 - ✅ **RESTful API**: 웹 페이지와 별도의 REST API 제공
+- ✅ **한글 주석**: 코드 가독성을 위한 상세한 한글 주석 포함
